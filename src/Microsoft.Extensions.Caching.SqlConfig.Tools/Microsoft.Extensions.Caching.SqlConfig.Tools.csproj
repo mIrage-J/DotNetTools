@@ -8,10 +8,10 @@
     <PackageId>Microsoft.Extensions.Caching.SqlConfig.Tools</PackageId>
     <PackageTags>cache;distributedcache;sqlserver</PackageTags>
     <PackageType>DotnetCliTool</PackageType>
+    <DisableImplicitFrameworkReferences>true</DisableImplicitFrameworkReferences>
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="**\*.cs" />
     <Compile Include="..\..\shared\**\*.cs" />
     <None Include="prefercliruntime" Pack="true" PackagePath="\prefercliruntime" />
     <None Include="$(ProjectRuntimeConfigFilePath)" Pack="true" PackagePath="lib\$(TargetFramework)" Condition="'$(DesignTimeBuild)'!='true'" />

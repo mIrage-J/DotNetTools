@@ -32,7 +32,6 @@ namespace Microsoft.DotNet.Watcher.Tools.Tests
             _tempDir
                 .WithCSharpProject("Project1", out target)
                     .WithTargetFrameworks("netcoreapp1.0")
-                    .WithDefaultGlobs()
                     .WithItem(new ItemSpec { Name = "Watch", Include = "*.js", Exclude = "gulpfile.js" })
                     .Dir()
                     .WithFile("Program.cs")
@@ -60,8 +59,7 @@ namespace Microsoft.DotNet.Watcher.Tools.Tests
             _tempDir
                 .WithCSharpProject("Project1", out target)
                     .WithTargetFrameworks("net40")
-                    .WithItem(new ItemSpec { Name = "Compile", Include = "*.cs" })
-                    .WithItem(new ItemSpec { Name = "EmbeddedResource", Include = "*.resx", Watch = false })
+                    .WithItem(new ItemSpec { Name = "EmbeddedResource", Update = "*.resx", Watch = false })
                     .Dir()
                     .WithFile("Program.cs")
                     .WithFile("Strings.resx");
@@ -89,7 +87,6 @@ namespace Microsoft.DotNet.Watcher.Tools.Tests
                     .SubDir("Project1")
                         .WithCSharpProject("Project1", out target)
                         .WithTargetFrameworks("netcoreapp1.0")
-                        .WithDefaultGlobs()
                         .Dir()
                         .WithFile("Program.cs")
                         .WithFile("Class1.cs")
@@ -123,6 +120,7 @@ namespace Microsoft.DotNet.Watcher.Tools.Tests
                     .SubDir("Project1")
                         .WithCSharpProject("Project1", out target)
                         .WithTargetFrameworks("netcoreapp1.0", "net451")
+                        .WithItem("Compile", include: null, remove: "**/*.cs")
                         .WithItem("Compile", "Class1.netcore.cs", "'$(TargetFramework)'=='netcoreapp1.0'")
                         .WithItem("Compile", "Class1.desktop.cs", "'$(TargetFramework)'=='net451'")
                         .Dir()
@@ -154,7 +152,6 @@ namespace Microsoft.DotNet.Watcher.Tools.Tests
                     .SubDir("Project2")
                         .WithCSharpProject("Project2", out proj2)
                         .WithTargetFrameworks("netstandard1.1")
-                        .WithDefaultGlobs()
                         .Dir()
                         .WithFile("Class2.cs")
                     .Up()
@@ -162,7 +159,6 @@ namespace Microsoft.DotNet.Watcher.Tools.Tests
                         .WithCSharpProject("Project1", out target)
                         .WithTargetFrameworks("netcoreapp1.0", "net451")
                         .WithProjectReference(proj2)
-                        .WithDefaultGlobs()
                         .Dir()
                         .WithFile("Class1.cs");
 
@@ -192,7 +188,6 @@ namespace Microsoft.DotNet.Watcher.Tools.Tests
                     .SubDir("Project3")
                         .WithCSharpProject("Project3", out proj3)
                         .WithTargetFrameworks("netstandard1.0")
-                        .WithDefaultGlobs()
                         .Dir()
                         .WithFile("Class3.cs")
                     .Up()
@@ -200,7 +195,6 @@ namespace Microsoft.DotNet.Watcher.Tools.Tests
                         .WithCSharpProject("Project2", out proj2)
                         .WithTargetFrameworks("netstandard1.1")
                         .WithProjectReference(proj3)
-                        .WithDefaultGlobs()
                         .Dir()
                         .WithFile("Class2.cs")
                     .Up()
@@ -208,7 +202,6 @@ namespace Microsoft.DotNet.Watcher.Tools.Tests
                         .WithCSharpProject("Project1", out target)
                         .WithTargetFrameworks("netcoreapp1.0", "net451")
                         .WithProjectReference(proj2)
-                        .WithDefaultGlobs()
                         .Dir()
                         .WithFile("Class1.cs");
 
@@ -233,7 +226,7 @@ namespace Microsoft.DotNet.Watcher.Tools.Tests
         public async Task ProjectReferences_Graph()
         {
             var graph = new TestProjectGraph(_tempDir);
-            graph.OnCreate(p => p.WithTargetFrameworks("net45").WithDefaultGlobs());
+            graph.OnCreate(p => p.WithTargetFrameworks("net45"));
             var matches = Regex.Matches(@"
             A->B B->C C->D D->E
                  B->E

@@ -5,10 +5,4 @@
     <OutputType>library</OutputType>
   </PropertyGroup>
 
-  <ItemGroup>
-    <Compile Include="**\*.cs" />
-    <EmbeddedResource Include="**\*.resx" />
-    <PackageReference Include="NETStandard.Library" Version="1.6.0" />
-  </ItemGroup>
-
 </Project>

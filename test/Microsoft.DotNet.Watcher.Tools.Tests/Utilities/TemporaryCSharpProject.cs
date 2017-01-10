@@ -11,8 +11,7 @@ namespace Microsoft.DotNet.Watcher.Tools.Tests
     public class TemporaryCSharpProject
     {
         private const string Template =
- @"<Project ToolsVersion=""15.0"" xmlns=""http://schemas.microsoft.com/developer/msbuild/2003"">
-  <Import Project=""$(MSBuildExtensionsPath)/$(MSBuildToolsVersion)/Microsoft.Common.props"" />
+ @"<Project ToolsVersion=""15.0"" Sdk=""Microsoft.NET.Sdk"">
   <PropertyGroup>
     {0}
     <OutputType>Exe</OutputType>
@@ -20,12 +19,7 @@ namespace Microsoft.DotNet.Watcher.Tools.Tests
   <ItemGroup>
     {1}
   </ItemGroup>
-  <Import Project=""$(MSBuildToolsPath)/Microsoft.CSharp.targets"" />
 </Project>";
-
-        private const string DefaultGlobs =
-@"<Compile Include=""**/*.cs"" Exclude=""obj/**/*;bin/**/*"" />
-<EmbeddedResource Include=""**/*.resx"" Exclude=""obj/**/*;bin/**/*"" />";
 
         private readonly string _filename;
         private readonly TemporaryDirectory _directory;
@@ -72,8 +66,8 @@ namespace Microsoft.DotNet.Watcher.Tools.Tests
             return this;
         }
 
-        public TemporaryCSharpProject WithItem(string itemName, string include, string condition = null)
-            => WithItem(new ItemSpec { Name = itemName, Include = include, Condition = condition });
+        public TemporaryCSharpProject WithItem(string itemName, string include, string condition = null, string remove = null)
+            => WithItem(new ItemSpec { Name = itemName, Include = include, Condition = condition, Remove = remove });
 
         public TemporaryCSharpProject WithItem(ItemSpec item)
         {
@@ -82,6 +76,7 @@ namespace Microsoft.DotNet.Watcher.Tools.Tests
             if (item.Include != null) sb.Append(" Include=\"").Append(item.Include).Append('"');
             if (item.Remove != null) sb.Append(" Remove=\"").Append(item.Remove).Append('"');
             if (item.Exclude != null) sb.Append(" Exclude=\"").Append(item.Exclude).Append('"');
+            if (item.Update != null) sb.Append(" Update=\"").Append(item.Update).Append('"');
             if (item.Condition != null) sb.Append(" Exclude=\"").Append(item.Condition).Append('"');
             if (!item.Watch) sb.Append(" Watch=\"false\" ");
             sb.Append(" />");
@@ -99,12 +94,6 @@ namespace Microsoft.DotNet.Watcher.Tools.Tests
             return WithItem(new ItemSpec { Name = "ProjectReference", Include = reference.Path, Watch = watch });
         }
 
-        public TemporaryCSharpProject WithDefaultGlobs()
-        {
-            _items.Add(DefaultGlobs);
-            return this;
-        }
-
         public TemporaryDirectory Dir() => _directory;
 
         public void Create()
@@ -118,6 +107,7 @@ namespace Microsoft.DotNet.Watcher.Tools.Tests
             public string Include { get; set; }
             public string Exclude { get; set; }
             public string Remove { get; set; }
+            public string Update { get; set; }
             public bool Watch { get; set; } = true;
             public string Condition { get; set; }
         }

@@ -4,11 +4,21 @@
 
   <PropertyGroup>
     <TargetFrameworks>netcoreapp1.0;netcoreapp1.1</TargetFrameworks>
+    <DisableImplicitFrameworkReferences>true</DisableImplicitFrameworkReferences>
+    <DisableDefaultRemoves>true</DisableDefaultRemoves>
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="**\*.cs" Exclude="TestProjects\**\*" />
+    <Compile Remove="TestProjects\**\*" />
     <Compile Include="..\Shared\**\*.cs" />
+
+    <!-- workaround https://github.com/dotnet/sdk/issues/623 -->
+    <Compile Remove="$(DefaultRemoves)" />
+    <EmbeddedResource Remove="$(DefaultRemoves)" />
+    <None Remove="$(DefaultRemoves)" />
+    <Content Remove="$(DefaultRemoves)" />
+    <!-- end workaround -->
+
     <Content Include="TestProjects\**\*" CopyToOutputDirectory="PreserveNewest" />
     <Content Include="..\..\src\Microsoft.DotNet.Watcher.Tools\toolassets\DotNetWatchInner.targets" Link="toolassets\DotNetWatchInner.targets" CopyToOutputDirectory="PreserveNewest" />
     <Content Include="..\..\src\Microsoft.DotNet.Watcher.Tools\toolassets\DotNetWatchOuter.targets" Link="toolassets\DotNetWatchOuter.targets" CopyToOutputDirectory="PreserveNewest" />
@@ -18,7 +28,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\Microsoft.DotNet.Watcher.Tools\Microsoft.DotNet.Watcher.Tools.csproj" />
     <ProjectReference Include="..\Microsoft.DotNet.Watcher.Tools.Tests\Microsoft.DotNet.Watcher.Tools.Tests.csproj" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.0.0-preview-20161123-03" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.0.0-preview-20170106-08" />
     <PackageReference Include="xunit" Version="2.2.0-beta4-build3444" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.2.0-beta4-build1194" />
   </ItemGroup>
