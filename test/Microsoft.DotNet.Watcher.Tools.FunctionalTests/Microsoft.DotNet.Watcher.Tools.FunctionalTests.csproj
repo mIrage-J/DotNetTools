@@ -3,7 +3,7 @@
   <Import Project="..\..\build\common.props" />
 
   <PropertyGroup>
-    <TargetFrameworks>netcoreapp1.0;netcoreapp1.1</TargetFrameworks>
+    <TargetFrameworks>netcoreapp1.0;netcoreapp2.0</TargetFrameworks>
     <DefaultItemExcludes>$(DefaultItemExcludes);TestProjects\**\*</DefaultItemExcludes>
   </PropertyGroup>
 
